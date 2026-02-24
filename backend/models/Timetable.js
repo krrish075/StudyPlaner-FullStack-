@@ -11,6 +11,11 @@ const timetableSchema = new mongoose.Schema({
     dailyStudyHours: { type: Number, required: true },
     examDate: { type: Date },
     isActive: { type: Boolean, default: true },
+    studyStyle: { type: String, enum: ['Pomodoro', 'Deep Work'], default: 'Pomodoro' },
+    pomodoroSettings: {
+        focusTime: { type: Number, default: 25 },
+        breakTime: { type: Number, default: 5 }
+    },
 }, { timestamps: true });
 
 const Timetable = mongoose.model('Timetable', timetableSchema);

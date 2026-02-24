@@ -14,6 +14,11 @@ const Generator = () => {
     dailyStudyHours: 4,
     examDate: '',
     daysOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    studyStyle: 'Pomodoro',
+    pomodoroSettings: {
+      focusTime: 25,
+      breakTime: 5
+    }
   });
 
   const [subjects, setSubjects] = useState([
@@ -91,6 +96,8 @@ const Generator = () => {
         dailyStudyHours: formData.dailyStudyHours,
         examDate: formData.examDate || undefined,
         daysOfWeek: formData.daysOfWeek,
+        studyStyle: formData.studyStyle,
+        pomodoroSettings: formData.pomodoroSettings,
         subjects: subjects.map(s => ({
           name: s.name || 'Untitled Subject',
           topics: s.topics.map(t => ({
@@ -200,6 +207,77 @@ const Generator = () => {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Study Style & Focus Preferences */}
+        <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm p-6 sm:p-8">
+          <h2 className="text-xl font-bold flex items-center gap-2 mb-6 text-slate-900 dark:text-white">
+            <Clock className="text-orange-500" /> Study Style
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Preferred Method</label>
+              <div className="flex bg-slate-100 dark:bg-slate-900/50 p-1.5 rounded-2xl">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, studyStyle: 'Pomodoro' })}
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${formData.studyStyle === 'Pomodoro' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'}`}
+                >
+                  Pomodoro Timer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, studyStyle: 'Deep Work' })}
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${formData.studyStyle === 'Deep Work' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'}`}
+                >
+                  Deep Work (Long Blocks)
+                </button>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 px-1">
+                {formData.studyStyle === 'Pomodoro'
+                  ? 'We will automatically split your heavy tasks into manageable focus and break sessions.'
+                  : 'Tasks will be scheduled in massive, uninterrupted blocks for maximum deep focus.'}
+              </p>
+            </div>
+
+            {formData.studyStyle === 'Pomodoro' && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="space-y-4"
+              >
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Custom Intervals (Minutes)</label>
+                <div className="flex gap-4">
+                  <div className="flex-1 space-y-2">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Focus Time</div>
+                    <select
+                      value={formData.pomodoroSettings.focusTime}
+                      onChange={(e) => setFormData({ ...formData, pomodoroSettings: { ...formData.pomodoroSettings, focusTime: parseInt(e.target.value) } })}
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl outline-none text-slate-900 dark:text-white"
+                    >
+                      <option value={25}>25 mins</option>
+                      <option value={45}>45 mins</option>
+                      <option value={50}>50 mins</option>
+                      <option value={60}>60 mins</option>
+                    </select>
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">Break Time</div>
+                    <select
+                      value={formData.pomodoroSettings.breakTime}
+                      onChange={(e) => setFormData({ ...formData, pomodoroSettings: { ...formData.pomodoroSettings, breakTime: parseInt(e.target.value) } })}
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl outline-none text-slate-900 dark:text-white"
+                    >
+                      <option value={5}>5 mins</option>
+                      <option value={10}>10 mins</option>
+                      <option value={15}>15 mins</option>
+                    </select>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
         </div>
 

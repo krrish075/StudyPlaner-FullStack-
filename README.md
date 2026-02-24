@@ -1,79 +1,82 @@
 # Smart Timetable & Study Planner Generator
 
-A modern, minimal, AI-assisted study planner aiming to help students optimize their daily schedules intelligently.
+A modern, full-stack productivity web application designed to help students optimize their study habits. Built with the MERN stack (MongoDB, Express, React, Node.js), this application features AI-driven smart scheduling, an integrated Pomodoro timer with local camera-based focus tracking, and an adaptive learning coach.
 
-Features a beautiful, responsive UI built with React + Tailwind CSS and a robust backend built with Node.js + Express.
+## Features
+
+*   **Smart Timetable Generator**: Input your subjects and available hours, and the backend algorithm will intelligently distribute tasks across your week based on priority and difficulty.
+*   **Pomodoro Timer & Sprint Chunking**: Choose between Deep Work or Pomodoro styles. The scheduler automatically chunks large subjects into focus and break intervals.
+*   **Camera-Based Focus Mode**: Uses local TensorFlow.js (`blazeface`) embedded in the browser to detect if you leave the camera frame during a focus session, triggering accountability alerts. (100% private, no video data is sent to the server).
+*   **Adaptive AI Study Coach**: A backend heuristic engine analyzes your completion rates and study habits over a rolling 7-day period to provide personalized, actionable tips on your dashboard.
+*   **Dark Mode**: Sleek light and dark themes using Tailwind CSS v4.
+*   **Analytics Dashboard**: Visualizes your daily study hours using `recharts` and summarizes your streaks.
+*   **Secure Authentication**: JWT-based login with an option to explore the app via temporary Guest sessions.
 
 ## Tech Stack
-* **Frontend:** React, Vite, Tailwind CSS (v4), Framer Motion, Recharts, Lucide React
-* **Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT Auth
 
-## Project Structure
-The repository is split into two directories:
-* \`frontend/\` - React front-end application
-* \`backend/\` - Express back-end application
+*   **Frontend**: React, Vite, Tailwind CSS, Framer Motion, Recharts, TensorFlow.js (Blazeface), React Webcam, Lucide React
+*   **Backend**: Node.js, Express, MongoDB, Mongoose, JSON Web Tokens (JWT), bcryptjs
 
 ## Prerequisites
-* Node.js (v18+ recommended)
-* MongoDB (Local instance or Atlas URI)
 
-## Setup & Installation
+*   Node.js (v18+ recommended)
+*   MongoDB (A local instance or a MongoDB Atlas URI)
 
-### 1. Database & Backend Environment
-1. Navigate to the backend directory:
-   \`\`\`bash
-   cd backend
-   \`\`\`
-2. Install dependencies:
-   \`\`\`bash
-   npm install
-   \`\`\`
-3. Create a \`.env\` file in the \`backend\` directory with the following variables:
-   \`\`\`env
-   PORT=5000
-   MONGO_URI=mongodb://127.0.0.1:27017/smart-study-planner
-   JWT_SECRET=your_jwt_secret_key
-   NODE_ENV=development
-   \`\`\`
-   *(Note: Ensure your MongoDB server is running if using a local DB.)*
+## Installation & Setup
 
-### 2. Frontend Environment
-1. Navigate to the frontend directory:
-   \`\`\`bash
-   cd frontend
-   \`\`\`
-2. Install dependencies:
-   \`\`\`bash
-   npm install
-   \`\`\`
+1.  **Clone the repository** (or download the source).
 
-## Running the Application Locally
+    ```bash
+    git clone <repository-url>
+    cd smart-study-planner
+    ```
 
-You will need two terminal windows to run the frontend and backend concurrently.
+2.  **Environment Variables**
 
-**Terminal 1 (Backend):**
-\`\`\`bash
-cd backend
-npm start
-# OR for development with auto-restart
-npx nodemon index.js
-\`\`\`
+    You need to set up environment variables for the backend. Copy the example file and update it with your own credentials.
 
-**Terminal 2 (Frontend):**
-\`\`\`bash
-cd frontend
-npm run dev
-\`\`\`
+    ```bash
+    cd backend
+    cp .env.example .env
+    ```
 
-The frontend config automatically proxies API requests matching \`/api/*\` to \`http://localhost:5000\`.
-Open your browser and navigate to the address shown by Vite (usually \`http://localhost:5173\`).
+    *Open `.env` and configure your `MONGO_URI` and `JWT_SECRET`.*
 
-## Key Features Implemented
-* JWT Authentication System & Guest Sessions
-* Dynamic Smart Scheduling Algorithm
-* Daily Task Planner with Progress Tracking
-* Analytics Dashboard Visualization
-* Framer Motion Animations
-* Dark/Light Mode Theme Toggle
+3.  **Install Dependencies**
 
-*Developed by Antigravity AI*
+    Open two terminals to install dependencies for both the frontend and backend.
+
+    ```bash
+    # Terminal 1: Backend
+    cd backend
+    npm install
+
+    # Terminal 2: Frontend
+    cd frontend
+    npm install
+    ```
+
+4.  **Run the Development Servers**
+
+    ```bash
+    # Terminal 1: Backend
+    cd backend
+    node index.js
+    # The backend will start on http://localhost:5000
+
+    # Terminal 2: Frontend
+    cd frontend
+    npm run dev
+    # The frontend will start on http://localhost:5173
+    ```
+
+## Usage
+
+1.  Navigate to `http://localhost:5173`.
+2.  Sign up for a new account or "Continue as Guest".
+3.  Click "New Timetable" to generate your first smart schedule. Be sure to select the "Pomodoro" study style to see the chunking algorithm in action.
+4.  Navigate to the **Planner** tab and click **Start** on a Focus task to test the Camera-Based Focus Mode.
+
+## License
+
+MIT License

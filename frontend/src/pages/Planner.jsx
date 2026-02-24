@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar as CalendarIcon, Clock, Trash2, CheckCircle, Circle, ChevronLeft, ChevronRight, Loader2, BookOpen } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Trash2, CheckCircle, Circle, ChevronLeft, ChevronRight, Loader2, BookOpen, Play } from 'lucide-react';
 import api from '../services/api';
+import PomodoroTimer from '../components/PomodoroTimer';
 
 const Planner = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [activeTask, setActiveTask] = useState(null);
 
   const fetchTasksForDate = async (date) => {
     setLoading(true);
@@ -42,6 +44,11 @@ const Planner = () => {
     } catch (error) {
       console.error('Failed to update task:', error);
     }
+  };
+
+  const handleTaskComplete = async (taskId) => {
+    await toggleTaskStatus(taskId, false); // Mark true
+    setActiveTask(null);
   };
 
   const isToday = new Date().toDateString() === currentDate.toDateString();
@@ -136,7 +143,12 @@ const Planner = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ delay: index * 0.05 }}
-                className={`flex items-center gap-4 p-5 rounded-2xl border ${task.completed ? 'bg-slate-50/80 dark:bg-slate-900/40 border-slate-100 dark:border-slate-800' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700'} transition-all`}
+                className={`flex items-center gap-4 p-5 rounded-2xl border ${task.completed
+                  ? 'bg-slate-50/80 dark:bg-slate-900/40 border-slate-100 dark:border-slate-800'
+                  : task.taskType === 'Break'
+                    ? 'bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-800/30 shadow-sm'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700'
+                  } transition-all`}
               >
                 <button
                   onClick={() => toggleTaskStatus(task._id, task.completed)}
@@ -154,12 +166,19 @@ const Planner = () => {
                     <h3 className={`text-lg font-bold truncate ${task.completed ? 'text-slate-400 dark:text-slate-500 line-through' : 'text-slate-900 dark:text-white'}`}>
                       {task.subject}
                     </h3>
-                    <span className={`text-xs px-2 py-0.5 rounded-md font-medium ${task.priority === 'High' ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400' :
-                      task.priority === 'Medium' ? 'bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400' :
-                        'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400'
-                      }`}>
-                      {task.priority} Prio
-                    </span>
+
+                    {task.taskType === 'Break' ? (
+                      <span className="text-xs px-2 py-0.5 rounded-md font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">
+                        Rest Block
+                      </span>
+                    ) : (
+                      <span className={`text-xs px-2 py-0.5 rounded-md font-medium ${task.priority === 'High' ? 'bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400' :
+                        task.priority === 'Medium' ? 'bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400' :
+                          'bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400'
+                        }`}>
+                        {task.priority} Prio
+                      </span>
+                    )}
                   </div>
                   <p className={`text-sm truncate ${task.completed ? 'text-slate-400 dark:text-slate-600' : 'text-slate-600 dark:text-slate-300'}`}>
                     {task.topic}
@@ -175,12 +194,37 @@ const Planner = () => {
                     <BookOpen size={16} className="text-accent-500" />
                     {task.difficulty}
                   </div>
+
+                  {!task.completed && (
+                    <button
+                      onClick={() => setActiveTask(task)}
+                      className="flex items-center gap-1 text-sm font-bold text-white bg-primary-600 hover:bg-primary-500 px-4 py-1.5 rounded-lg shadow-sm transition-transform active:scale-95 ml-2"
+                    >
+                      <Play size={14} fill="currentColor" /> Start
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
         )}
       </div>
+
+      {activeTask && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          >
+            <PomodoroTimer
+              task={activeTask}
+              onComplete={handleTaskComplete}
+              onCancel={() => setActiveTask(null)}
+            />
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 };

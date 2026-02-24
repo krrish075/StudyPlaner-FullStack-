@@ -4,6 +4,7 @@ import { BookOpen, CheckCircle, Clock, TrendingUp, Calendar as CalendarIcon, Loa
 import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import AICoachWidget from '../components/AICoachWidget';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
@@ -218,11 +219,8 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
 
-            <div className="mt-6 p-4 bg-primary-50 dark:bg-primary-500/10 rounded-2xl flex items-start gap-3">
-              <BrainCircuit className="text-primary-600 dark:text-primary-400 shrink-0" size={20} />
-              <p className="text-sm text-primary-900 dark:text-primary-100/80 leading-relaxed">
-                You've studied <strong>12% more</strong> this week compared to last week. Keep up the excellent work!
-              </p>
+            <div className="mt-6">
+              <AICoachWidget />
             </div>
           </div>
         </div>

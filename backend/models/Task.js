@@ -16,7 +16,8 @@ const taskSchema = new mongoose.Schema({
     date: { type: Date, required: true },
     completed: { type: Boolean, default: false },
     priority: { type: String, enum: ['High', 'Medium', 'Low'], default: 'Medium' },
-    difficulty: { type: String, enum: ['Hard', 'Medium', 'Easy'], default: 'Medium' }
+    difficulty: { type: String, enum: ['Hard', 'Medium', 'Easy'], default: 'Medium' },
+    taskType: { type: String, enum: ['Focus', 'Break'], default: 'Focus' }
 }, { timestamps: true });
 
 const Task = mongoose.model('Task', taskSchema);
